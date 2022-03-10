@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Fetch API Exercise Lab</title>
+  </head>
+  <body>
+    <div id="container">
+      <h1>The Fetch API Exercises</h1>
+      <p>Open the web inspector console to test.</p>
+      <button id="load-photo" onclick="init()">Load Dog Photo</button>
+    </div>
+  </body>
+  <script>
+    const url = "https://dog.ceo/api/breeds/image/random";
+
+    // To get data from url
+    async function getData() {
+      // Write one basic Fetch API call to URL using fetch()
+      let markup = ``;
+
+      const data = await fetch(url)
+        // Add .then to the fetch() call and convert the response to JSON
+        .then((response) => response.json())
+        // Add .then to log the data to the console
+        .then((data) => {
+          console.log(data.message);
+          markup += `<img src="${data.message}" alt="Random photo of a dog"/>`;
+          console.log(markup);
+        })
+        // Add .catch() statement that displays any errors that may occur
+        .catch((error) => console.error(error));
+      // Display an image of the random dog image before the end of the container div
+      document
+        .querySelector("#container")
+        .insertAdjacentHTML("beforeend", markup);
+    }
+
+    // To get random dog photo and return it
+    function getRandomDogPhoto() {
+      return fetch(url)
+        .then((response) => response.json())
+        .catch((error) => console.error(error));
+    }
+
+    // To initialize the data from the img url and pass it to renderDogPhotos() funtion
+    async function init() {
+      const button = handleButton();
+      loadSpinner(button);
+      const data = await getRandomDogPhoto();
+      let img = `<img src="${data.message}" alt="Random photo of a dog"/>`;
+      removeSpinner();
+      // Load the img variable inside of the button
+      button.insertAdjacentHTML("afterbegin", img);
+      // renderDogPhotos(data.message);
+    }
+
+    // Takes the url for a dog photo and display it on the page
+    function renderDogPhotos(url) {
+      let img = `<img src="${url}" alt="Random photo of a dog"/>`;
+      document
+        .querySelector("#container")
+        .insertAdjacentHTML("beforeend", markup);
+    }
+
+    // To load a spinner which shows loading image process
+    function loadSpinner(button) {
+      button.disabled = true;
+      const spinner = `assets/loader.svg`;
+      const img = `<img src="${spinner}" id="spinner" alt="Loading spinner image" />`;
+      document.querySelector(`#container`).insertAdjacentHTML(`beforeend`, img);
+    }
+
+    // To remove a spinner after loading image is done
+    function removeSpinner() {
+      const spinner = document.querySelector(`img#spinner`);
+      spinner.parentElement.removeChild(spinner);
+    }
+
+    function handleButton() {
+      // Select the button with an ID of load-photo and
+      // assign it to a variable of button.
+      const button = document.querySelector("#load-photo");
+      return button;
+    }
+
+    // Assign a button
+    // getData();
+  </script>
+</html>
